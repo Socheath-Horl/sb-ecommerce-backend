@@ -43,11 +43,21 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             logger.error("Cannot set user authentication: {}", e);
         }
+        
+        filterChain.doFilter(request, response);
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String jwt = jwtUtils.getJwtFromHeader(request);
-        logger.debug("AuthTokenFilter.java: {}", jwt);
-        return jwt;
+        String jwtFromCookie = jwtUtils.getJwtFromCookies(request);
+
+        if (jwtFromCookie != null) {
+            return jwtFromCookie;
+        }
+
+        String jwtFromHeader = jwtUtils.getJwtFromHeader(request);
+        if (jwtFromHeader != null) {
+            return jwtFromHeader;
+        }
+        return null;
     }
 }
