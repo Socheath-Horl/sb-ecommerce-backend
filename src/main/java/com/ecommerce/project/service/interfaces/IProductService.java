@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public interface IProductService {
 
-    PaginationResponseDto<ProductDto, Product> getAllProducts(HttpServletRequest request, Pageable pageable);
+    PaginationResponseDto<ProductDto, Product> getAllProducts(HttpServletRequest request, Pageable pageable, String keyword, String category);
 
     PaginationResponseDto<ProductDto, Product> searchByCategory(HttpServletRequest request, Pageable pageable, Long categoryId);
 
@@ -24,4 +24,8 @@ public interface IProductService {
     ProductDto deleteProduct(Long productId);
 
     ProductDto updateImage(Long productId, MultipartFile image) throws IOException;
+
+    PaginationResponseDto<ProductDto, Product> getAllProductsForAdmin(HttpServletRequest request, Pageable pageable);
+
+    PaginationResponseDto<ProductDto, Product> getAllProductsForSeller(HttpServletRequest request, Pageable pageable);
 }
