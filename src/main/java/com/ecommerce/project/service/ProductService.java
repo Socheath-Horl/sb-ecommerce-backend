@@ -177,7 +177,7 @@ public class ProductService implements IProductService {
 
     @Override
     public PaginationResponseDto<ProductDto, Product> getAllProducts(HttpServletRequest request, Pageable pageable, String keyword, String category) {
-        Specification<Product> spec = Specification.where((Specification<Product>) null);
+        Specification<Product> spec = (root, query, cb) -> cb.conjunction();
         if (keyword != null && !keyword.isEmpty()) {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.like(criteriaBuilder.lower(root.get("name")), "%" + keyword.toLowerCase() + "%"));

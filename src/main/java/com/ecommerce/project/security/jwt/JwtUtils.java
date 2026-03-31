@@ -31,10 +31,10 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     @Value("${spring.app.jwtCookieName}")
-    private String jwtCookieName;
+    private String jwtCookie;
 
     public String getJwtFromCookies(HttpServletRequest request) {
-        Cookie cookie = WebUtils.getCookie(request, jwtCookieName);
+        Cookie cookie = WebUtils.getCookie(request, jwtCookie);
         if (cookie != null) {
             return cookie.getValue();
         } else {
@@ -52,8 +52,8 @@ public class JwtUtils {
 
     public ResponseCookie generateJwtCookie(BaseUserDetails userPrincipal) {
         String jwt = generateTokenFromUsername(userPrincipal.getUsername());
-        ResponseCookie cookie = ResponseCookie.from(jwtCookieName, jwt)
-                .path("/api")
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, jwt)
+                .path("/")
                 .maxAge(24 * 60 * 60)
                 .httpOnly(false)
                 .secure(false)
@@ -62,8 +62,8 @@ public class JwtUtils {
     }
 
     public ResponseCookie getCleanJwtCookie() {
-        ResponseCookie cookie = ResponseCookie.from(jwtCookieName, null)
-                .path("/api")
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
+                .path("/")
                 .build();
         return cookie;
     }
@@ -77,7 +77,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public String getUsernameFromJwtToken(String token) {
+    public String getUserNameFromJwtToken(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) key())
                 .build().parseSignedClaims(token)
@@ -90,7 +90,6 @@ public class JwtUtils {
 
     public boolean validateJwtToken(String authToken) {
         try {
-            System.out.println("Validate");
             Jwts.parser().verifyWith((SecretKey) key()).build().parseSignedClaims(authToken);
             return true;
         } catch (MalformedJwtException e) {

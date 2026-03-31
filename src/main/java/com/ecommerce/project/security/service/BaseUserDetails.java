@@ -29,7 +29,7 @@ public class BaseUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     public BaseUserDetails(Long id, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
